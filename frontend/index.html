@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
+    <title>Mini Blinkit ERP — Warehouse Automation Platform</title>
+    <meta name="description" content="Enterprise ERP and Warehouse Automation Platform. Manage purchase orders, inventory, GRNs, delivery challans, and analytics in one platform." />
+    <meta name="robots" content="noindex, nofollow" /><!-- Internal app — no indexing -->
+
+    <!-- Open Graph (for internal dashboards/bookmarks) -->
+    <meta property="og:title" content="Mini Blinkit ERP" />
+    <meta property="og:description" content="Warehouse Automation Platform" />
+    <meta property="og:type" content="website" />
+
+    <!-- Preconnect to Google Fonts for faster load -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!--
+      WHY Inter font:
+        Inter is designed for screens — optimized letter spacing, x-height,
+        and legibility for UI text at small sizes. Used by Notion, Linear,
+        Vercel, and most premium SaaS products. Dramatically better than
+        system fonts for professional appearance.
+
+      WHY JetBrains Mono:
+        Monospace font for barcode values, SKUs, order numbers — ensures
+        digits are fixed-width and distinguishable (0 vs O, 1 vs l).
+    -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

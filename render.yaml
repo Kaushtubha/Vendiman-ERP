@@ -1,0 +1,34 @@
+# =============================================================================
+# render.yaml — Render Infrastructure as Code Blueprint
+# =============================================================================
+services:
+  # ── FastAPI Backend Web Service ─────────────────────────────────────────────
+  - type: web
+    name: vendiman-backend-api
+    env: python
+    region: singapore # or frankfurt/oregon
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_NAME
+        value: Vendiman ERP
+      - key: DEBUG
+        value: "false"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: DATABASE_URL
+        sync: false # Set in Render Dashboard: postgresql+asyncpg://...
+      - key: SECRET_KEY
+        generateValue: true # Render will generate a cryptographically strong 256-bit key
+      - key: CORS_ORIGINS
+        value: https://your-vendiman-dashboard.vercel.app,http://localhost:5173
+      - key: STORAGE_BACKEND
+        value: local
+      - key: MEDIA_ROOT
+        value: /tmp/media
+      - key: PYTHON_VERSION
+        value: 3.11.9

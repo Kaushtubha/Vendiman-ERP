@@ -1,0 +1,111 @@
+# =============================================================================
+# requirements.txt — Production Dependencies
+# =============================================================================
+#
+# PINNING STRATEGY:
+#   All versions are pinned with == for production reproducibility.
+#   Use `pip-compile` (pip-tools) to generate this from requirements.in.
+#   Never use unpinned versions (>=) in production — transitive dependency
+#   upgrades have caused production outages at scale.
+#
+# DEPENDENCY GROUPS:
+#   [Web Framework] FastAPI + Uvicorn + Gunicorn
+#   [Database]      SQLAlchemy async + asyncpg driver + Alembic
+#   [Validation]    Pydantic v2 + email-validator
+#   [Auth]          python-jose (JWT) + passlib + bcrypt
+#   [Cache]         redis (async) + hiredis (C parser, 10x faster)
+#   [Task Queue]    Celery + redis broker + celery-redbeat (distributed beat)
+#   [PDF]           ReportLab (layout control) + WeasyPrint (HTML→PDF)
+#   [Excel]         openpyxl (xlsx read/write)
+#   [Storage]       boto3 (S3-compatible, used even with local via MinIO)
+#   [Utilities]     python-multipart, Pillow, python-dateutil, pytz
+#   [Monitoring]    sentry-sdk (error tracking), prometheus-fastapi-instrumentator
+#
+# =============================================================================
+
+# ── Web Framework ──────────────────────────────────────────────────────────────
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+gunicorn==23.0.0
+python-multipart==0.0.17        # Required for form/file uploads in FastAPI
+httpx==0.28.1                   # Async HTTP client used in tests + webhooks
+starlette==0.41.3               # FastAPI's underlying ASGI framework
+
+# ── Database & ORM ────────────────────────────────────────────────────────────
+# WHY SQLAlchemy async (asyncpg driver): Full async support means the API
+# event loop never blocks on DB I/O. Under load, this dramatically improves
+# throughput compared to synchronous psycopg2.
+# WHY asyncpg over psycopg3: asyncpg is a pure-async, Cython-compiled driver.
+# Benchmarks show 2-5x faster than psycopg3 for raw query throughput.
+sqlalchemy==2.0.36
+asyncpg==0.30.0                 # Async PostgreSQL driver
+alembic==1.14.0                 # Database migration tool
+psycopg2-binary==2.9.10         # Required by Alembic (sync) for migration generation
+
+# ── Validation & Serialization ────────────────────────────────────────────────
+# WHY Pydantic v2: Rewritten in Rust (pydantic-core). Validation is 5-50x
+# faster than v1. Model compilation at import time, not at request time.
+pydantic==2.10.3
+pydantic-settings==2.6.1        # Settings management with env var support
+pydantic[email]==2.10.3         # EmailStr field validation
+email-validator==2.2.0
+
+# ── Authentication & Security ─────────────────────────────────────────────────
+# WHY python-jose over PyJWT: python-jose supports both HS256 and RS256
+# (asymmetric keys) out of the box — easier to upgrade to RS256 later.
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4          # Password hashing — bcrypt is the standard
+bcrypt==4.2.1
+cryptography==44.0.0
+
+# ── Cache & Session ───────────────────────────────────────────────────────────
+# WHY hiredis: C-extension parser for Redis protocol. Provides 10x faster
+# response parsing for high-throughput cache reads.
+redis==5.2.1
+hiredis==3.1.0
+
+# ── Task Queue ────────────────────────────────────────────────────────────────
+# WHY celery[redis]: Redis as both broker and result backend simplifies the
+# infrastructure (no separate RabbitMQ). For > 10k tasks/sec, migrate to
+# RabbitMQ or SQS by changing CELERY_BROKER_URL only.
+celery[redis]==5.4.0
+celery-redbeat==2.4.2           # Distributed periodic task scheduler (Redis-backed)
+kombu==5.4.2                    # Messaging library underlying Celery
+flower==2.0.1                   # Celery task monitor
+
+# ── PDF Generation ────────────────────────────────────────────────────────────
+# WHY ReportLab: Industry standard for programmatic PDF generation in Python.
+# Full control over layout, fonts, tables, barcodes. Used at banks, logistics.
+# WHY NOT WeasyPrint alone: WeasyPrint (HTML→PDF) is great for templates but
+# ReportLab gives pixel-perfect control needed for barcode labels, PO layouts.
+reportlab==4.2.5
+Pillow==11.0.0                  # Image processing (product images in PDFs)
+
+# ── Excel Automation ──────────────────────────────────────────────────────────
+# WHY openpyxl: Read/write .xlsx format with full formatting support.
+# WHY NOT xlsxwriter: Write-only (cannot read). WHY NOT xlrd: Read-only.
+# openpyxl handles both import AND export in one library.
+openpyxl==3.1.5
+
+# ── Cloud Storage (S3-compatible) ─────────────────────────────────────────────
+# boto3 is used even with local storage via MinIO S3 gateway.
+# This means switching from local → AWS S3 requires only an env var change.
+boto3==1.35.91
+botocore==1.35.91
+
+# ── Date & Time ───────────────────────────────────────────────────────────────
+python-dateutil==2.9.0.post0
+pytz==2024.2
+arrow==1.3.0                    # Friendly datetime library for formatting
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+python-slugify==8.0.4           # SKU/slug generation from product names
+shortuuid==1.0.13               # Compact UUID for human-readable IDs (PO numbers)
+orjson==3.10.12                 # Faster JSON serialization (Rust-based, 2x faster)
+
+# ── Monitoring & Observability ────────────────────────────────────────────────
+sentry-sdk[fastapi]==2.19.2     # Error tracking — captures exceptions to Sentry
+prometheus-fastapi-instrumentator==7.0.0  # Prometheus metrics endpoint
+
+# ── CORS & Middleware ─────────────────────────────────────────────────────────
+slowapi==0.1.9                  # Rate limiting middleware for FastAPI

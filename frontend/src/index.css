@@ -1,0 +1,316 @@
+/*
+ * index.css — Global Design System CSS Variables
+ *
+ * PATTERN: CSS Custom Properties as design tokens.
+ *
+ * WHY CSS variables (not Tailwind config only):
+ *   Tailwind's config generates static class names at build time.
+ *   CSS variables are runtime — they change when switching dark/light mode
+ *   without rebuilding the CSS. This enables instant dark mode toggling.
+ *
+ * WHY HSL format:
+ *   HSL (Hue, Saturation, Lightness) allows fine-grained adjustments.
+ *   To make a color 10% lighter: increase L by 10. Impossible with hex.
+ *   The space-separated format (without hsl()) allows Tailwind to compose
+ *   opacity: `bg-primary/50` applies 50% opacity to hsl(var(--primary)).
+ *
+ * COLOR SYSTEM DESIGN:
+ *   Light mode: High contrast, clean whites, subtle shadows
+ *   Dark mode: True dark (not gray), high contrast, vibrant accents
+ *
+ *   Primary: Indigo 600 → professional, premium B2B SaaS aesthetic
+ *   Not using pure blue — overused, less distinctive
+ *
+ * TYPOGRAPHY SCALE:
+ *   Inter variable font — from 300 (light) to 800 (bold)
+ *   Base size: 14px for data-dense ERP interfaces
+ *   NOT 16px — ERP tables have 10+ columns, smaller text fits more data
+ */
+
+/* ── Google Fonts Import ──────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Light Mode Design Tokens ─────────────────────────────────────────────── */
+@layer base {
+  :root {
+    /* Backgrounds */
+    --background: 0 0% 98%;             /* #FAFAFA — Off-white, easier on eyes */
+    --foreground: 224 71% 4%;           /* Near-black for text */
+
+    /* Cards & Surfaces */
+    --card: 0 0% 100%;                  /* Pure white cards on off-white bg */
+    --card-foreground: 224 71% 4%;
+
+    /* Popover (dropdown, tooltip backgrounds) */
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+
+    /* Primary — Indigo */
+    --primary: 239 84% 67%;             /* Indigo 500 — #6366F1 */
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary — Slate */
+    --secondary: 220 14% 96%;           /* Light slate */
+    --secondary-foreground: 220 9% 46%;
+
+    /* Muted — For labels, placeholders */
+    --muted: 220 14% 95%;
+    --muted-foreground: 220 9% 46%;     /* Slate 500 */
+
+    /* Accent — Subtle hover states */
+    --accent: 239 100% 97%;             /* Very light indigo */
+    --accent-foreground: 239 84% 67%;
+
+    /* Destructive — Red for errors, delete actions */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Form elements */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 239 84% 67%;
+
+    /* Border radius */
+    --radius: 0.5rem;
+
+    /* ── Status Colors ────────────────────────────────────────────────── */
+    /* Used for: PO status badges, inventory alerts, GRN status */
+
+    /* Success — Green */
+    --success: 142 76% 36%;             /* Green 600 */
+    --success-foreground: 0 0% 100%;
+    --success-muted: 142 76% 95%;       /* Light green background */
+
+    /* Warning — Amber */
+    --warning: 38 92% 50%;              /* Amber 500 */
+    --warning-foreground: 38 92% 10%;
+    --warning-muted: 38 92% 95%;
+
+    /* Danger — Red (different from Destructive — for data states) */
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 100%;
+    --danger-muted: 0 84% 95%;
+
+    /* Info — Blue */
+    --info: 217 91% 60%;                /* Blue 500 */
+    --info-foreground: 0 0% 100%;
+    --info-muted: 217 91% 95%;
+
+    /* ── Sidebar ──────────────────────────────────────────────────────── */
+    --sidebar-background: 224 71% 4%;   /* Very dark navy — distinct from cards */
+    --sidebar-foreground: 213 31% 91%;  /* Light text on dark bg */
+    --sidebar-primary: 239 84% 67%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 224 71% 10%;      /* Slightly lighter than sidebar bg */
+    --sidebar-accent-foreground: 213 31% 91%;
+    --sidebar-border: 224 71% 10%;
+    --sidebar-ring: 239 84% 67%;
+  }
+
+  /* ── Dark Mode Tokens ───────────────────────────────────────────────────── */
+  .dark {
+    /* Backgrounds */
+    --background: 224 71% 4%;           /* #0A0F1E — Deep navy, not pure black */
+    --foreground: 213 31% 91%;          /* Slate 200 — not pure white (reduces eye strain) */
+
+    /* Cards — slightly lighter than background */
+    --card: 222 47% 7%;                 /* #0D1526 */
+    --card-foreground: 213 31% 91%;
+
+    --popover: 222 47% 7%;
+    --popover-foreground: 213 31% 91%;
+
+    /* Primary stays bright in dark mode */
+    --primary: 239 84% 67%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary */
+    --secondary: 224 47% 11%;
+    --secondary-foreground: 213 31% 91%;
+
+    /* Muted */
+    --muted: 224 47% 11%;
+    --muted-foreground: 215 20% 55%;    /* Subdued text for labels */
+
+    /* Accent */
+    --accent: 224 47% 13%;
+    --accent-foreground: 239 84% 75%;
+
+    /* Destructive */
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Form elements */
+    --border: 224 47% 13%;
+    --input: 224 47% 11%;
+    --ring: 239 84% 67%;
+
+    /* Status colors (darker, more saturated in dark mode) */
+    --success: 142 72% 50%;
+    --success-foreground: 142 72% 5%;
+    --success-muted: 142 72% 7%;
+
+    --warning: 38 92% 55%;
+    --warning-foreground: 38 92% 5%;
+    --warning-muted: 38 92% 7%;
+
+    --danger: 0 84% 65%;
+    --danger-foreground: 0 0% 100%;
+    --danger-muted: 0 84% 7%;
+
+    --info: 217 91% 65%;
+    --info-foreground: 0 0% 100%;
+    --info-muted: 217 91% 7%;
+
+    /* Sidebar in dark mode — even darker to create depth */
+    --sidebar-background: 224 71% 2%;
+    --sidebar-foreground: 213 31% 80%;
+    --sidebar-primary: 239 84% 67%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 224 71% 6%;
+    --sidebar-accent-foreground: 213 31% 91%;
+    --sidebar-border: 224 71% 6%;
+    --sidebar-ring: 239 84% 67%;
+  }
+}
+
+/* ── Global Base Styles ────────────────────────────────────────────────────── */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-size: 14px;                    /* ERP density: 14px base vs standard 16px */
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'cv11', 'ss01';  /* Inter OpenType features for numbers */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Monospace for all data identifiers */
+  .font-mono,
+  .data-id,
+  .sku,
+  .barcode,
+  .po-number {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.85em;
+    letter-spacing: 0.02em;
+  }
+
+  /* Scrollbar styling — dark theme native */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
+}
+
+/* ── Utility Classes ───────────────────────────────────────────────────────── */
+@layer utilities {
+  /* Skeleton / shimmer loading state */
+  .skeleton {
+    @apply animate-pulse bg-muted rounded;
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 25%,
+      hsl(var(--accent)) 50%,
+      hsl(var(--muted)) 75%
+    );
+    background-size: 200% 100%;
+    @apply animate-shimmer;
+  }
+
+  /* Status badge base */
+  .status-badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  /* Glassmorphism panel — used sparingly on overlay elements */
+  .glass {
+    @apply backdrop-blur-md bg-white/10 dark:bg-white/5 border border-white/20;
+  }
+
+  /* Data table row hover */
+  .table-row-hover {
+    @apply transition-colors duration-100 hover:bg-muted/50 cursor-pointer;
+  }
+
+  /* Card with hover elevation */
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+
+  /* Focus ring — consistent with Shadcn */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  /* Page transition animation */
+  .page-enter {
+    @apply animate-fade-in;
+  }
+
+  /* Gradient text — for KPI numbers, important metrics */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent;
+  }
+}
+
+/* ── Component Overrides ────────────────────────────────────────────────────── */
+@layer components {
+  /* Table styling — ERP-specific dense tables */
+  .erp-table {
+    @apply w-full text-sm;
+  }
+
+  .erp-table thead th {
+    @apply px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider bg-muted/50 border-b border-border;
+  }
+
+  .erp-table tbody td {
+    @apply px-4 py-3 border-b border-border/50 text-sm;
+  }
+
+  .erp-table tbody tr {
+    @apply table-row-hover;
+  }
+
+  /* KPI Card */
+  .kpi-card {
+    @apply bg-card border border-border rounded-xl p-5 card-hover;
+  }
+
+  /* Sidebar nav item */
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150;
+    @apply text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent;
+  }
+
+  .nav-item.active {
+    @apply text-sidebar-primary-foreground bg-sidebar-primary;
+  }
+}

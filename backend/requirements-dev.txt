@@ -1,0 +1,26 @@
+# =============================================================================
+# requirements-dev.txt — Development & Test Dependencies
+# =============================================================================
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+pytest==8.3.4
+pytest-asyncio==0.24.0          # Async test support
+pytest-cov==6.0.0               # Coverage reporting
+pytest-mock==3.14.0             # Mock utilities
+httpx==0.28.1                   # ASGI test client for FastAPI
+
+# ── Factories ─────────────────────────────────────────────────────────────────
+factory-boy==3.3.1              # Test data factories (mirrors production data shape)
+
+# ── Linting & Formatting ──────────────────────────────────────────────────────
+# WHY Ruff: Replaces flake8 + isort + pyupgrade. 100x faster (Rust-based).
+# WHY NOT Black alone: Black doesn't catch logic errors, only formats.
+ruff==0.8.4
+mypy==1.13.0                    # Static type checking
+
+# ── Debug ─────────────────────────────────────────────────────────────────────
+debugpy==1.8.11                 # VS Code remote debug support in Docker
+ipython==8.31.0
+
+# ── Database test support ─────────────────────────────────────────────────────
+pytest-postgresql==6.1.1        # In-process Postgres for unit tests

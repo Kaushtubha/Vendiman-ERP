@@ -1,0 +1,51 @@
+# =============================================================================
+# .dockerignore — Backend
+# =============================================================================
+# WHY: Prevents Docker build context from including unnecessary files.
+# Large contexts slow down `docker build` and can leak secrets.
+# =============================================================================
+
+# Version control
+.git/
+.gitignore
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Dev/test artifacts
+tests/
+*.md
+docs/
+
+# Secrets (never in image)
+.env
+*.env
+*.pem
+*.key
+
+# Media and generated files (use volumes in runtime)
+media/
+exports/
+uploads/
+logs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Alembic versions (runtime migrations, not part of image)
+# Intentionally NOT excluded — migrations need to run on startup

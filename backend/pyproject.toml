@@ -1,0 +1,95 @@
+# =============================================================================
+# pyproject.toml — Tool Configuration
+# =============================================================================
+#
+# Centralizes configuration for Ruff (linting/formatting), mypy (types),
+# pytest (testing), and project metadata. The pyproject.toml standard (PEP 518,
+# PEP 621) replaces setup.py, setup.cfg, .flake8, .mypy.ini — one file for all.
+#
+# =============================================================================
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+fix = true                      # Auto-fix safe violations
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # Pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear (common bugs)
+    "C4",   # flake8-comprehensions
+    "UP",   # pyupgrade (modernize syntax)
+    "N",    # pep8-naming
+    "SIM",  # flake8-simplify
+    "TCH",  # flake8-type-checking (TYPE_CHECKING blocks)
+    "ANN",  # flake8-annotations (type hints required)
+    "S",    # bandit security checks
+    "ERA",  # detect commented-out code
+    "PT",   # pytest conventions
+]
+ignore = [
+    "ANN101",   # Missing type annotation for self
+    "ANN102",   # Missing type annotation for cls
+    "S101",     # Use of assert (allowed in tests)
+    "B008",     # Do not perform function call in default args (FastAPI DI pattern)
+    "ERA001",   # Commented out code (we use explanatory comments intentionally)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "ANN", "PLR2004"]
+"alembic/*" = ["ANN", "INP001"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+combine-as-imports = true
+force-sort-within-sections = true
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+plugins = ["pydantic.mypy", "sqlalchemy.ext.mypy.plugin"]
+exclude = ["alembic/", "tests/"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+[tool.pytest.ini_options]
+# WHY asyncio_mode = "auto": All test coroutines auto-wrapped without decorator
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "-ra",                      # Show all extra test summary info
+    "--cov=app",
+    "--cov-report=term-missing",
+    "--cov-report=html:htmlcov",
+    "--cov-fail-under=80",      # Enforce 80% code coverage minimum
+]
+markers = [
+    "unit: Pure unit tests (no DB, no external services)",
+    "integration: Integration tests (DB required)",
+    "slow: Tests that take > 1 second",
+]
+
+[tool.coverage.run]
+source = ["app"]
+omit = [
+    "*/tests/*",
+    "*/migrations/*",
+    "app/main.py",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+fail_under = 80
