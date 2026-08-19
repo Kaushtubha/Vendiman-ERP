@@ -3,6 +3,13 @@ app/domain/models/__init__.py
 
 Exports all ORM models. Importing this package registers all models
 with Base.metadata — required for Alembic autogenerate.
+
+NOTE: `order.py` (CustomerOrder / OrderLineItem) is no longer imported
+here — it modeled a quick-commerce delivery-order flow that doesn't apply
+to unattended vending machines. The file is left in place (not deleted)
+so nothing else in the tree breaks on import; it can be removed once
+po_repository.py's stray references are cleaned up. Sales are now
+represented by `VendTransaction` (transaction.py).
 """
 
 from app.domain.models.user import User, RefreshToken
@@ -16,8 +23,10 @@ from app.domain.models.inventory import (
     InventoryBatch,
 )
 from app.domain.models.warehouse import Warehouse, WarehouseTransfer, TransferLineItem
-from app.domain.models.order import CustomerOrder, OrderLineItem
+from app.domain.models.machine import Machine, MachineSlot
+from app.domain.models.transaction import VendTransaction, ImportBatch
 from app.domain.models.delivery_challan import DeliveryChallan, DCLineItem
+from app.domain.models.machine_receipt import MachineReceipt, MachineReceiptLineItem
 
 __all__ = [
     "User",
@@ -35,8 +44,12 @@ __all__ = [
     "Warehouse",
     "WarehouseTransfer",
     "TransferLineItem",
-    "CustomerOrder",
-    "OrderLineItem",
+    "Machine",
+    "MachineSlot",
+    "VendTransaction",
+    "ImportBatch",
     "DeliveryChallan",
     "DCLineItem",
+    "MachineReceipt",
+    "MachineReceiptLineItem",
 ]

@@ -91,6 +91,11 @@ class Product(Base):
     image_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     weight_grams: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
+    # Slot-space efficiency (Vendiman Module 4) — the physical space one unit
+    # occupies in a machine spiral/tray. Defaults to 1 so profit-per-slot
+    # gracefully degrades to plain profit-per-unit until real values are set.
+    slot_space_units: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False, default=1)
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
@@ -112,8 +117,15 @@ class Product(Base):
     grn_line_items: Mapped[list["GRNLineItem"]] = relationship(  # type: ignore[name-defined]
         "GRNLineItem", back_populates="product"
     )
-    order_line_items: Mapped[list["OrderLineItem"]] = relationship(  # type: ignore[name-defined]
-        "OrderLineItem", back_populates="product"
+    # NOTE: the old `order_line_items` relationship (to OrderLineItem) was
+    # removed — that model belonged to the deprecated customer-order flow.
+    # Sales are now on VendTransaction, referenced by product_id without a
+    # back_populates collection here (no need to load "all transactions
+    # for a product" through the Product object; queries go through the
+    # vend_transactions table directly, indexed on product_id).
+
+    vend_transactions: Mapped[list["VendTransaction"]] = relationship(  # type: ignore[name-defined]
+        "VendTransaction", back_populates="product"
     )
 
     def __repr__(self) -> str:

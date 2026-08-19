@@ -56,10 +56,19 @@ class InventoryStock(Base):
         nullable=False,
         index=True,
     )
-    warehouse_id: Mapped[uuid.UUID] = mapped_column(
+    # Location: exactly one of warehouse_id / machine_id should be set.
+    # warehouse_id = central warehouse stock; machine_id = live stock inside
+    # a vending machine (fed from machine_slots.current_quantity on restock/sale).
+    warehouse_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("warehouses.id", ondelete="CASCADE"),
-        nullable=False,
+        nullable=True,
+        index=True,
+    )
+    machine_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("machines.id", ondelete="CASCADE"),
+        nullable=True,
         index=True,
     )
 
@@ -105,10 +114,16 @@ class InventoryTransaction(Base):
         nullable=False,
         index=True,
     )
-    warehouse_id: Mapped[uuid.UUID] = mapped_column(
+    warehouse_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("warehouses.id", ondelete="RESTRICT"),
-        nullable=False,
+        nullable=True,
+        index=True,
+    )
+    machine_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("machines.id", ondelete="RESTRICT"),
+        nullable=True,
         index=True,
     )
     performed_by_id: Mapped[uuid.UUID | None] = mapped_column(
@@ -171,15 +186,26 @@ class InventoryBatch(Base):
         nullable=False,
         index=True,
     )
-    warehouse_id: Mapped[uuid.UUID] = mapped_column(
+    warehouse_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("warehouses.id", ondelete="RESTRICT"),
-        nullable=False,
+        nullable=True,
+        index=True,
+    )
+    machine_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("machines.id", ondelete="RESTRICT"),
+        nullable=True,
         index=True,
     )
     grn_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("goods_receipt_notes.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    machine_receipt_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("machine_receipts.id", ondelete="SET NULL"),
         nullable=True,
     )
 

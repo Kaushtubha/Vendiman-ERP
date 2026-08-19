@@ -295,3 +295,74 @@ class DocumentType(StrEnum):
 class SortDirection(StrEnum):
     ASC = "asc"
     DESC = "desc"
+
+
+# ── Vending Machines ───────────────────────────────────────────────────────────
+class MachineStatus(StrEnum):
+    """Operational status of a vending machine."""
+
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    UNDER_MAINTENANCE = "under_maintenance"
+    DECOMMISSIONED = "decommissioned"
+
+
+class VendStatus(StrEnum):
+    """
+    Outcome of a single vend attempt, mirrors the source export's `Status`
+    column (SUCCESS / CANCELLED / FAILED etc.), normalized to a fixed set.
+    """
+
+    SUCCESS = "success"
+    FAILED = "failed"
+    CANCELLED = "cancelled"
+    PARTIAL = "partial"  # some units in the order succeeded, some failed
+
+
+class VendPaymentStatus(StrEnum):
+    SUCCESS = "success"
+    FAILED = "failed"
+    PENDING = "pending"
+    CANCELLED = "cancelled"
+
+
+class VendRefundStatus(StrEnum):
+    NONE = "none"
+    INITIATED = "initiated"
+    COMPLETED = "completed"
+    FAILED = "failed"
+
+
+# ── Machine Delivery (Warehouse → Machine restock) ─────────────────────────────
+class MachineDeliveryStatus(StrEnum):
+    """
+    Status of a Delivery Challan raised to restock a machine from the
+    warehouse. Distinct from DCStatus (customer-order DC) — this is the
+    warehouse→machine leg described in the Vendiman spec (DGRN module).
+
+    State machine:
+        PENDING → RECEIVED
+                ↘ DISCREPANCY  (received qty doesn't match dispatched qty)
+    """
+
+    PENDING = "pending"
+    RECEIVED = "received"
+    DISCREPANCY = "discrepancy"
+
+
+# ── Alerts ──────────────────────────────────────────────────────────────────────
+class AlertType(StrEnum):
+    LOW_STOCK = "low_stock"
+    NEAR_EXPIRY = "near_expiry"
+    DEAD_STOCK = "dead_stock"
+
+
+class AlertChannel(StrEnum):
+    EMAIL = "email"
+    WHATSAPP = "whatsapp"
+
+
+class AlertStatus(StrEnum):
+    PENDING = "pending"
+    SENT = "sent"
+    FAILED = "failed"

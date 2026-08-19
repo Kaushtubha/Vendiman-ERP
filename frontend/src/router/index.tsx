@@ -17,6 +17,7 @@ const ProductsPage = React.lazy(() => import('@/pages/products/ProductsPage'))
 const SuppliersPage = React.lazy(() => import('@/pages/suppliers/SuppliersPage'))
 const PurchaseOrdersPage = React.lazy(() => import('@/pages/purchase-orders/PurchaseOrdersPage'))
 const GRNPage = React.lazy(() => import('@/pages/grn/GRNPage'))
+const DeliveryChallansPage = React.lazy(() => import('@/pages/dc/DeliveryChallansPage'))
 const InventoryPage = React.lazy(() => import('@/pages/inventory/InventoryPage'))
 const ProfitabilityPage = React.lazy(() => import('@/pages/profitability/ProfitabilityPage'))
 const AlertsPage = React.lazy(() => import('@/pages/alerts/AlertsPage'))
@@ -97,6 +98,14 @@ const router = createBrowserRouter([
             element: (
               <Suspense fallback={<PageLoader />}>
                 <GRNPage />
+              </Suspense>
+            ),
+          },
+          {
+            path: '/dc',
+            element: (
+              <Suspense fallback={<PageLoader />}>
+                <DeliveryChallansPage />
               </Suspense>
             ),
           },

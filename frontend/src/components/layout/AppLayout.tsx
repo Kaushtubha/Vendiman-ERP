@@ -24,14 +24,15 @@ import { Badge } from '@/components/ui/badge'
 
 const navItems = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  { name: 'Products & Slots', path: '/products', icon: Package },
+  { name: 'Products', path: '/products', icon: Package },
   { name: 'Suppliers', path: '/suppliers', icon: Truck },
   { name: 'Purchase Orders', path: '/purchase-orders', icon: FileSpreadsheet },
-  { name: 'Goods Receipt (DGRN)', path: '/grn', icon: Receipt },
-  { name: 'Inventory Stock', path: '/inventory', icon: Warehouse },
-  { name: 'Profitability Analysis', path: '/profitability', icon: TrendingUp },
-  { name: 'Alerts & Health', path: '/alerts', icon: AlertTriangle, badge: 'Live' },
-  { name: 'Bulk Excel Upload', path: '/upload', icon: Upload },
+  { name: 'GRN', path: '/grn', icon: Receipt },
+  { name: 'Delivery Challans (DC)', path: '/dc', icon: Truck },
+  { name: 'Inventory', path: '/inventory', icon: Warehouse },
+  { name: 'Profitability', path: '/profitability', icon: TrendingUp },
+  { name: 'Alerts', path: '/alerts', icon: AlertTriangle, badge: 'Live' },
+  { name: 'Upload Data', path: '/upload', icon: Upload },
 ]
 
 export default function AppLayout() {
